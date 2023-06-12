@@ -44,10 +44,12 @@ func main() {
 	}
 	if err := scanner.Err(); err != nil {
 		fmt.Println(os.Stderr, "Error: ", err)
+		panic(err)
 	}
 
 	if len(elves) < topN{
 		fmt.Println("not enough elves to get top: ", topN, " elves: ", len(elves))
+		return
 	}
 
 	sort.Slice(elves, func (i,j int) bool { return elves[i].calories > elves[j].calories})
