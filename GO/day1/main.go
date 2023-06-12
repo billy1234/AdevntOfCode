@@ -5,22 +5,32 @@ import (
 	"bufio"
 	"os"
 	"strconv"
+	"sort"
 )
+
+type Elf struct {
+	position int
+	calories int
+}
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	
-	var elfNum, winningElf int = 0, 0;
+	var elfNum, currentCalories int = 1, 0;
 
-	var maxCalories, currentCalories int = 0, 0;
+	var topN = 3;
+
+	var elves []Elf
 
 	for scanner.Scan(){
 		currLine := scanner.Text()
 
 		
-		if currLine == ""{
+		if currLine == "" {	
+			elves = append(elves, Elf{elfNum,currentCalories})
 			elfNum++
 			currentCalories = 0
+
 		} else {
 			i, err := strconv.Atoi(currLine)
 			if err != nil {
@@ -29,17 +39,27 @@ func main() {
 			}
 			currentCalories += i;
 
-			if currentCalories >= maxCalories{
-				maxCalories = currentCalories
-				winningElf = elfNum
-			}
 		}
 			
 	}
 	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "Error: ", err)
+		fmt.Println(os.Stderr, "Error: ", err)
 	}
 
-	fmt.Println("Winner: ",winningElf, " Calories: ", maxCalories);
+	if len(elves) < topN{
+		fmt.Println("not enough elves to get top: ", topN, " elves: ", len(elves))
+	}
+
+	sort.Slice(elves, func (i,j int) bool { return elves[i].calories > elves[j].calories})
+
+	total := 0
+
+	for i := 0; i < topN; i++ {
+		total += elves[i].calories
+		fmt.Println("Elf:", i + 1, "  ", elves[i])
+	
+	}
+
+	fmt.Println("Total calories: ", total)
 }
  
