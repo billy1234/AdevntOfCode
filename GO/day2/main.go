@@ -38,7 +38,6 @@ var moveLookup = map[string]Move {
 const win int = 6
 
 func main() {
-	fmt.Println("Hello World.")
 
 	scanner := bufio.NewScanner(os.Stdin)
 
