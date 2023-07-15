@@ -7,7 +7,7 @@ import (
 )
 
 
-func getSharedChar(a string, b string) byte{
+func getSharedChar(a string, b string) byte {
 	for i := 0; i < len(a); i ++{
 		for j := 0; j < len(b); j++{
 			if a[i] == b[j]{
@@ -16,6 +16,14 @@ func getSharedChar(a string, b string) byte{
 		}
 	}
 	return 0x00
+}
+
+func getPriority(char byte) int {
+	if char >= byte(97) {
+		return int(char - 96)
+	} else {
+		return int(27 + char - 65)
+	}
 }
 
 
@@ -29,12 +37,7 @@ func main() {
 
 		if currLine != "" {
 			char := getSharedChar( currLine[0: len(currLine)/2], currLine[len(currLine)/2:len(currLine)])
-			if char >= byte(97) {
-				char -= 96
-			} else {
-				char = 27 + char - 65
-			}
-			total += int(char)
+			total += getPriority(char)
 		}
 	}
 
