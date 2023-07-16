@@ -23,6 +23,10 @@ func (p *pair) contains() bool {
 	return (p.a.start >= p.b.start && p.a.end <= p.b.end) || (p.b.start >= p.a.start && p.b.end <= p.a.end)
 }
 
+func (p *pair) intersects() bool {
+	return !(p.a.start > p.b.end || p.a.end < p.b.start)
+}
+
 func rangeFromStr(str string) *sectionRange {
 	elems := strings.Split(str, "-")
 
@@ -50,8 +54,8 @@ func pairFromStr(str string) *pair {
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	var pairs []pair
-	count := 0
+	containsCount := 0
+	intersectsCount := 0
 
 	for scanner.Scan() {
 		currLine := scanner.Text()
@@ -59,11 +63,13 @@ func main() {
 		if currLine != "" {
 			pair := pairFromStr(currLine)
 
-			if pair.contains() {
-				count ++
+			if pair.intersects() { //if there is no intersection, there is no contains
+				intersectsCount ++
+				if pair.contains() {
+					containsCount ++
+				}
 			}
 
-			pairs = append(pairs, *pair)
 		}
 	}
 
@@ -72,6 +78,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("intersections: ",count)
+	fmt.Println("contains: ",containsCount)
+	fmt.Println("intersections: ", intersectsCount)
 }
 
